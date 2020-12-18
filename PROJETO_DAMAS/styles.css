@@ -1,0 +1,42 @@
+table, td{
+    border: solid black 1px;
+}
+
+td{
+    padding: 20px;
+}
+
+table{
+    width: 400px;
+    height: 400px;
+}
+
+tr{
+    height: 50px;
+}
+
+td{
+    width: 50px;
+    height: 100%;
+    cursor: pointer;
+}
+
+.white{
+    background-color: #ffffff;
+}
+
+.black{
+    background-color: #000000;
+}
+
+.selected{
+    background-color: #FF0000;
+}
+
+body{
+    background-color: silver;
+}
+
+.margin-bottom{
+    margin-bottom: 300px;
+}
