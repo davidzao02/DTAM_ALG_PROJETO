@@ -40,3 +40,8 @@ body{
 .margin-bottom{
     margin-bottom: 300px;
 }
+
+.center{
+    margin-left: auto;
+    margin-right: auto;
+}
