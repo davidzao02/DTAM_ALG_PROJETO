@@ -45,3 +45,14 @@ body{
     margin-left: auto;
     margin-right: auto;
 }
+
+#firstPlayer, #firstPlayerPoints{
+    color: grey;
+    background-color: #343a40;
+}
+
+
+#secondPlayer, #secondPlayerPoints{
+    color: white;
+    background-color: #343a40;
+}
