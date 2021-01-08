@@ -32,3 +32,4 @@ if (pointsFirst == 12 || pointsSecond == 12) {
         winner = secondName
     }
     alert(`FIM DO JOGO! O VENCEDOR É ${winner}`)
+}
