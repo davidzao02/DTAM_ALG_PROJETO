@@ -20,14 +20,8 @@ tr {
     height: 100px;
 }
 
-<<<<<<< HEAD
-td{
-    width: 50px;
-=======
 td {
     width: 100px;
-    height: 100%;
->>>>>>> 7d0cbdb95ae7af5c33c46ffbf6eb40c7b1051225
     cursor: pointer;
 }
 
