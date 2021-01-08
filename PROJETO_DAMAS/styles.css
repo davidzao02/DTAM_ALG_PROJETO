@@ -60,3 +60,10 @@ body {
 #secondPlayerPoints {
     color: red;
 }
+
+div.content {
+    margin-top: 30px;
+}
+th {
+    text-align: center;
+}
