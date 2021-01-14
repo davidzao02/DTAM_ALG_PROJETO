@@ -8,26 +8,20 @@ table {
 }
 
 td {
-    padding: 20px;
+    padding: 4px;
 }
 
 table {
-    width: 800px;
-    height: 800px;
+    width: 490px;
+    height: 490px;
 }
 
 tr {
-    height: 100px;
+    height: 70px;
 }
 
-<<<<<<< HEAD
-td{
-    width: 50px;
-=======
 td {
-    width: 100px;
->>>>>>> f5cdbb85b71e60729dc301b2197eaf44df31c4bb
-    cursor: pointer;
+    width: 70px;
 }
 
 .white {
@@ -55,14 +49,14 @@ body {
     margin-right: auto;
 }
 
-#firstPlayer,
-#firstPlayerPoints {
+#player1,
+#player1Points {
     color: blue;
 }
 
 
-#secondPlayer,
-#secondPlayerPoints {
+#player2,
+#player2Points {
     color: red;
 }
 

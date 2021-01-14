@@ -1,43 +1,74 @@
+window.onload = function () {
+    getPlayers();
+    fillTable();
+}
+
 let pointsFirst = 0,
     pointsSecond = 0,
     winner = '';
 
 let map = [
-    [2, 0, 2, 0, 2, 0, 2, 0],
-    [0, 2, 0, 2, 0, 2, 0, 2],
-    [2, 0, 2, 0, 2, 0, 2, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 1, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0]
+    [null, 2, null, 2, null, 2, null, 2],
+    [2, null, 2, null, 2, null, 2, null],
+    [null, 2, null, 2, null, 2, null, 2],
+    [0, null, 0, null, 0, null, 0, null],
+    [null, 0, null, 0, null, 0, null, 0],
+    [1, null, 1, null, 1, null, 1, null],
+    [null, 1, null, 1, null, 1, null, 1],
+    [1, null, 1, null, 1, null, 1, null]
 ]
 
-function fillTable(map) {
-    let cells = document.querySelectorAll('td')
-    // let col = 1, line = 1
-
-    // for (let o = 0; o < 64; o++) {
-
-    //     cells[o].setAttribute('id', `cell${col}_${line}`)
-    // }
-
-    for (let i = 0; i < map.length; i++) {
-        for (let j = 0; j < map[i].length; j++) {
-            if (map[i][j] == 1) {
-
-            }
-        }
+function getPlayers(){
+    for (let i = 0; i < 2; i++) {
+        let text = document.getElementById(`player${i+1}`)
+        text.innerHTML = prompt(`Digite o nome do jogador ${i+1}`)
     }
 }
 
-if (pointsFirst == 12 || pointsSecond == 12) {
-    if (pointsFirst == 12) {
-        winner = firstName
-    } else if (pointsSecond == 12) {} else if (pointsSecond == 12) {
-        winner = secondName
+//CRIAR TABULEIRO E POSICIONAR PEÇAS
+
+function fillTable() {
+    let table = document.getElementById('board')
+
+    for (let i = 0; i < map.length; i++) {
+        let line = document.createElement('tr')
+        line.id = `linha_${i+1}`
+        for (let j = 0; j < map[i].length; j++) {
+            let col = document.createElement('td')
+            col.id = `cell_${i+1}_${j+1}`
+            if (map[i][j] == 1) {
+                let bluePiece = document.createElement('img')
+                bluePiece.src = 'images/bluePiece.png'
+                bluePiece.id = `bluePiece_${i+1}_${j+1}`
+                col.append(bluePiece)
+                col.classList.add('black')
+            } else if (map[i][j] == 2) {
+                let redPiece = document.createElement('img')
+                redPiece.src = 'images/redPiece.png'
+                col.classList.add('black')
+                col.append(redPiece);
+            } else if (map[i][j] == 0) {
+                col.classList.add('black')
+            } else if (map[i][j] == null) {
+                col.classList.add('white')
+            }
+            line.append(col)
+        }
+        table.append(line)
     }
-    alert(`FIM DO JOGO! O VENCEDOR É ${winner}`)
+}
+
+//EFETUAR JOGADA E VERIFICAR SE O JOGADOR VENCEU
+
+function movePiece(){
+
+    //VERIFICAR SE O JOGADOR VENCEU APÓS A JOGADA
+    if (pointsFirst == 12 || pointsSecond == 12) {
+        if (pointsFirst == 12) {
+            winner = firstName
+        } else if (pointsSecond == 12) {} else if (pointsSecond == 12) {
+            winner = secondName
+        }
+        alert(`FIM DO JOGO! O VENCEDOR É ${winner}`)
+    }
 }
