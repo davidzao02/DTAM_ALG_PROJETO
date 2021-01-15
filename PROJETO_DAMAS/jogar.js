@@ -1,8 +1,3 @@
-window.onload = function () {
-    getPlayers();
-    fillTable();
-}
-
 let vitoryPoints = 12,
     pointsFirst = 0,
     pointsSecond = 0,
@@ -23,6 +18,9 @@ let map = [
 let bluePieces = document.getElementsByName('bluePiece')
 let redPieces = document.getElementsByName('redPiece')
 
+getPlayers();
+fillTable();
+
 //OBTER NOME DOS JOGADORES (FEITO)
 
 function getPlayers() {
@@ -34,7 +32,7 @@ function getPlayers() {
 
 //CRIAR TABULEIRO E POSICIONAR PEÇAS (FEITO)
 
-function fillTable() {
+const fillTable = () => {
     let table = document.getElementById('board')
 
     for (let i = 0; i < map.length; i++) {
@@ -76,8 +74,13 @@ function verifyPositions(piece) {
 
 //EFETUAR JOGADA E VERIFICAR SE O JOGADOR VENCEU
 
+console.log(bluePieces);
+
 for (let i = 0; i < bluePieces.length; i++) {
+    console.log('entrei');
     bluePieces[i].addEventListener('click', function movePiece() {
+
+        console.log(bluepieces[i]);
 
         verifyPositions(bluePieces[i]);
 
@@ -90,7 +93,19 @@ for (let i = 0; i < bluePieces.length; i++) {
     })
 }
 
+for (let i = 0; i < redPieces.length; i++) {
+    bluePieces[i].addEventListener('click', function movePiece() {
 
+        verifyPositions(redPieces[i]);
+
+        //MOVER A PEÇA
+
+
+
+        // verifyChecker();
+        endTurn();
+    })
+}
 
 //VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO)
 
