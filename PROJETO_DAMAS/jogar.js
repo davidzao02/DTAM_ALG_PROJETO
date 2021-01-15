@@ -18,8 +18,8 @@ let map = [
 let bluePieces = document.getElementsByName('bluePiece')
 let redPieces = document.getElementsByName('redPiece')
 
-getPlayers();
 fillTable();
+getPlayers();
 
 //OBTER NOME DOS JOGADORES (FEITO)
 
@@ -32,7 +32,7 @@ function getPlayers() {
 
 //CRIAR TABULEIRO E POSICIONAR PEÇAS (FEITO)
 
-const fillTable = () => {
+function fillTable() {
     let table = document.getElementById('board')
 
     for (let i = 0; i < map.length; i++) {
@@ -70,6 +70,8 @@ const fillTable = () => {
 
 function verifyPositions(piece) {
     console.log(piece.id);
+
+    
 }
 
 //EFETUAR JOGADA E VERIFICAR SE O JOGADOR VENCEU
@@ -79,8 +81,6 @@ console.log(bluePieces);
 for (let i = 0; i < bluePieces.length; i++) {
     console.log('entrei');
     bluePieces[i].addEventListener('click', function movePiece() {
-
-        console.log(bluepieces[i]);
 
         verifyPositions(bluePieces[i]);
 
@@ -93,10 +93,12 @@ for (let i = 0; i < bluePieces.length; i++) {
     })
 }
 
+console.log(redPieces);
+
 for (let i = 0; i < redPieces.length; i++) {
     bluePieces[i].addEventListener('click', function movePiece() {
 
-        verifyPositions(redPieces[i]);
+        //verifyPositions(redPieces[i]);
 
         //MOVER A PEÇA
 
