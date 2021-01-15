@@ -20,8 +20,8 @@ let map = [
     [1, null, 1, null, 1, null, 1, null]
 ]
 
-let bluePiece = document.getElementsByName('bluePiece')
-let redPiece = document.getElementsByName('redPiece')
+let bluePieces = document.getElementsByName('bluePiece')
+let redPieces = document.getElementsByName('redPiece')
 
 //OBTER NOME DOS JOGADORES (FEITO)
 
@@ -70,20 +70,31 @@ function fillTable() {
 
 //VERIFICAR SE É POSSIVEL MOVER A PEÇA
 
-function verifyPositions() {
-    
+function verifyPositions(piece) {
+    console.log(piece.id);
 }
 
 //EFETUAR JOGADA E VERIFICAR SE O JOGADOR VENCEU
 
-bluePiece.addEventListener('click', function movePiece() {
+for (let i = 0; i < bluePieces.length; i++) {
+    bluePieces[i].addEventListener('click', function movePiece() {
 
-    verifyPositions();
+        verifyPositions(bluePieces[i]);
 
-    //MOVER A PEÇA
+        //MOVER A PEÇA
 
 
-    //VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO)
+
+        // verifyChecker();
+        endTurn();
+    })
+}
+
+
+
+//VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO)
+
+function verifyChecker() {
 
     // if (turn == 1) {
     //     bluePiece.forEach(pieces => {
@@ -92,8 +103,12 @@ bluePiece.addEventListener('click', function movePiece() {
     //         }
     //     });
     // }
+}
 
-    //VERIFICAR SE O JOGADOR VENCEU APÓS A JOGADA (FEITO)
+//VERIFICAR SE O JOGADOR VENCEU APÓS A JOGADA E FAZER A TROCA DE TURNOS (FEITO)
+
+function endTurn() {
+
     if (pointsFirst == vitoryPoints || pointsSecond == vitoryPoints) {
         if (pointsFirst == vitoryPoints) {
             winner = firstName
@@ -103,7 +118,6 @@ bluePiece.addEventListener('click', function movePiece() {
         alert(`FIM DO JOGO! O VENCEDOR É ${winner}`)
     }
 
-    //FAZER A TROCA DE TURNOS (FEITO)
     let spanTurn1 = document.getElementById('turn1')
     let spanTurn2 = document.getElementById('turn2')
     if (turn == 1) {
@@ -115,4 +129,4 @@ bluePiece.addEventListener('click', function movePiece() {
         spanTurn1.hidden = true;
         spanTurn2.hidden = false;
     }
-})
+}
