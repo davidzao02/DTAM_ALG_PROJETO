@@ -3,7 +3,8 @@ window.onload = function () {
     fillTable();
 }
 
-let pointsFirst = 0,
+let vitoryPoints = 12,
+    pointsFirst = 0,
     pointsSecond = 0,
     winner = '',
     turn = 1;
@@ -19,7 +20,10 @@ let map = [
     [1, null, 1, null, 1, null, 1, null]
 ]
 
-//OBTER NOME DOS JOGADORES
+let bluePiece = document.getElementsByName('bluePiece')
+let redPiece = document.getElementsByName('redPiece')
+
+//OBTER NOME DOS JOGADORES (FEITO)
 
 function getPlayers() {
     for (let i = 0; i < 2; i++) {
@@ -28,7 +32,7 @@ function getPlayers() {
     }
 }
 
-//CRIAR TABULEIRO E POSICIONAR PEÇAS
+//CRIAR TABULEIRO E POSICIONAR PEÇAS (FEITO)
 
 function fillTable() {
     let table = document.getElementById('board')
@@ -66,33 +70,49 @@ function fillTable() {
 
 //VERIFICAR SE É POSSIVEL MOVER A PEÇA
 
-let bluePiece = document.getElementsByName('bluePiece')
-let redPiece = document.getElementsByName('redPiece')
+function verifyPositions() {
+    
+}
 
 //EFETUAR JOGADA E VERIFICAR SE O JOGADOR VENCEU
 
-function movePiece() {
+bluePiece.addEventListener('click', function movePiece() {
+
+    verifyPositions();
 
     //MOVER A PEÇA
 
 
     //VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO)
 
-    if (turn == 1) {
-        bluePiece.forEach(pieces => {
-            if (piece.id == '') {
+    // if (turn == 1) {
+    //     bluePiece.forEach(pieces => {
+    //         if (piece.id == '') {
 
-            }
-        });
-    }
+    //         }
+    //     });
+    // }
 
-    //VERIFICAR SE O JOGADOR VENCEU APÓS A JOGADA
-    if (pointsFirst == 12 || pointsSecond == 12) {
-        if (pointsFirst == 12) {
+    //VERIFICAR SE O JOGADOR VENCEU APÓS A JOGADA (FEITO)
+    if (pointsFirst == vitoryPoints || pointsSecond == vitoryPoints) {
+        if (pointsFirst == vitoryPoints) {
             winner = firstName
-        } else if (pointsSecond == 12) {} else if (pointsSecond == 12) {
+        } else if (pointsSecond == vitoryPoints) {
             winner = secondName
         }
         alert(`FIM DO JOGO! O VENCEDOR É ${winner}`)
     }
-}
+
+    //FAZER A TROCA DE TURNOS (FEITO)
+    let spanTurn1 = document.getElementById('turn1')
+    let spanTurn2 = document.getElementById('turn2')
+    if (turn == 1) {
+        turn = 2
+        spanTurn1.hidden = false;
+        spanTurn2.hidden = true;
+    } else {
+        turn = 1
+        spanTurn1.hidden = true;
+        spanTurn2.hidden = false;
+    }
+})
