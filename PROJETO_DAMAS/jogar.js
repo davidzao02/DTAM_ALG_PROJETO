@@ -5,7 +5,8 @@ window.onload = function () {
 
 let pointsFirst = 0,
     pointsSecond = 0,
-    winner = '';
+    winner = '',
+    turn = 1;
 
 let map = [
     [null, 2, null, 2, null, 2, null, 2],
@@ -18,7 +19,9 @@ let map = [
     [1, null, 1, null, 1, null, 1, null]
 ]
 
-function getPlayers(){
+//OBTER NOME DOS JOGADORES
+
+function getPlayers() {
     for (let i = 0; i < 2; i++) {
         let text = document.getElementById(`player${i+1}`)
         text.innerHTML = prompt(`Digite o nome do jogador ${i+1}`)
@@ -40,11 +43,14 @@ function fillTable() {
                 let bluePiece = document.createElement('img')
                 bluePiece.src = 'images/bluePiece.png'
                 bluePiece.id = `bluePiece_${i+1}_${j+1}`
+                bluePiece.name = 'bluePiece'
                 col.append(bluePiece)
                 col.classList.add('black')
             } else if (map[i][j] == 2) {
                 let redPiece = document.createElement('img')
                 redPiece.src = 'images/redPiece.png'
+                redPiece.id = `redPiece_${i+1}_${j+1}`
+                redPiece.name = 'redPiece'
                 col.classList.add('black')
                 col.append(redPiece);
             } else if (map[i][j] == 0) {
@@ -58,9 +64,27 @@ function fillTable() {
     }
 }
 
+//VERIFICAR SE É POSSIVEL MOVER A PEÇA
+
+let bluePiece = document.getElementsByName('bluePiece')
+let redPiece = document.getElementsByName('redPiece')
+
 //EFETUAR JOGADA E VERIFICAR SE O JOGADOR VENCEU
 
-function movePiece(){
+function movePiece() {
+
+    //MOVER A PEÇA
+
+
+    //VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO)
+
+    if (turn == 1) {
+        bluePiece.forEach(pieces => {
+            if (piece.id == '') {
+
+            }
+        });
+    }
 
     //VERIFICAR SE O JOGADOR VENCEU APÓS A JOGADA
     if (pointsFirst == 12 || pointsSecond == 12) {
