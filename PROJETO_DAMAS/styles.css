@@ -37,7 +37,8 @@ td {
 }
 
 body {
-    background-color: silver;
+    background-image: linear-gradient(to bottom right,#c7c7c7, grey);
+    background-attachment: fixed;
 }
 
 .margin-bottom {
