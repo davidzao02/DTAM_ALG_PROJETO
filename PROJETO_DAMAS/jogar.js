@@ -2,7 +2,8 @@ let vitoryPoints = 12,
     pointsFirst = 0,
     pointsSecond = 0,
     winner = '',
-    turn = 1;
+    turn = 1,
+    players = [];
 
 let map = [
     [null, 2, null, 2, null, 2, null, 2],
@@ -27,6 +28,7 @@ function getPlayers() {
     for (let i = 0; i < 2; i++) {
         let text = document.getElementById(`player${i+1}`)
         text.innerHTML = prompt(`Digite o nome do jogador ${i+1}`)
+        players[i] = text.innerHTML;
     }
 }
 
@@ -71,7 +73,21 @@ function fillTable() {
 function verifyPositions(piece) {
     console.log(piece.id);
 
-    
+    let cell = piece.parentElement.id
+
+    console.log(cell);
+
+    let line = parseInt(cell.substring(5, 6))
+    console.log(line);
+
+    let col = parseInt(cell.substring(7,8))
+    console.log(col);
+
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[i].length; j++) {
+            
+        }        
+    }
 }
 
 //EFETUAR JOGADA E VERIFICAR SE O JOGADOR VENCEU
@@ -79,21 +95,22 @@ function verifyPositions(piece) {
 console.log(bluePieces);
 
 for (let i = 0; i < bluePieces.length; i++) {
-    console.log('entrei');
     bluePieces[i].addEventListener('click', function movePiece() {
 
-        verifyPositions(bluePieces[i]);
+        if (turn == 1) {
+            verifyPositions(bluePieces[i]);   
+        }else{
+            alert(`É a vez de ${players[1]}`)
+        }
 
         //MOVER A PEÇA
-
+        
 
 
         // verifyChecker();
         endTurn();
     })
 }
-
-console.log(redPieces);
 
 for (let i = 0; i < redPieces.length; i++) {
     bluePieces[i].addEventListener('click', function movePiece() {
@@ -137,6 +154,7 @@ function endTurn() {
 
     let spanTurn1 = document.getElementById('turn1')
     let spanTurn2 = document.getElementById('turn2')
+
     if (turn == 1) {
         turn = 2
         spanTurn1.hidden = false;
