@@ -37,12 +37,11 @@ td {
 }
 
 body {
-    background-image: linear-gradient(to bottom right,#c7c7c7, grey);
-    background-attachment: fixed;
+    background-color: silver;
 }
 
 .margin-bottom {
-    margin-bottom: 100px;
+    margin-bottom: 30px;
 }
 
 .center {
@@ -69,6 +68,26 @@ div.content {
 th {
     text-align: center;
 }
+body {
+    background-image: linear-gradient(to bottom right, black, grey);
+    background-attachment: fixed;
+}
+footer {
+    background-color: rgb(33, 37, 41);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+h1, h2, h3, p{
+    color: white;
+}
+
+p {
+    text-align: justify;
+}
+
 
 .logo{
     width: 50px;
