@@ -18,6 +18,7 @@ let map = [
 
 let bluePieces = document.getElementsByName('bluePiece')
 let redPieces = document.getElementsByName('redPiece')
+let cells = document.getElementsByClassName('cell-moves')
 
 fillTable();
 getPlayers();
@@ -46,14 +47,14 @@ function fillTable() {
             if (map[i][j] == 1) {
                 let bluePiece = document.createElement('img')
                 bluePiece.src = 'images/bluePiece.png'
-                bluePiece.id = `bluePiece_${i+1}_${j+1}`
+                //bluePiece.id = `bluePiece_${i+1}_${j+1}`
                 bluePiece.name = 'bluePiece'
                 col.append(bluePiece)
                 col.classList.add('black')
             } else if (map[i][j] == 2) {
                 let redPiece = document.createElement('img')
                 redPiece.src = 'images/redPiece.png'
-                redPiece.id = `redPiece_${i+1}_${j+1}`
+                //redPiece.id = `redPiece_${i+1}_${j+1}`
                 redPiece.name = 'redPiece'
                 col.classList.add('black')
                 col.append(redPiece);
@@ -72,7 +73,8 @@ function fillTable() {
 
 function verifyPositions(piece) {
     let cell = piece.parentElement
-    cell.style.backgroundColor = 'darkRed'
+    cell.classList.add('cell-selected')
+    // cell.style.backgroundColor = 'darkRed'
 
     let line = parseInt(cell.id.substring(5, 6))
 
@@ -89,8 +91,10 @@ function verifyPositions(piece) {
         if (map[line + 1][col + 1] == 0) {
             let cellRight = document.getElementById(`cell_${line - 1}_${col - 1}`)
             let cellLeft = document.getElementById(`cell_${line - 1}_${col + 1}`)
-            cellRight.style.borderColor = 'red'
-            cellLeft.style.borderColor = 'red'
+            cellRight.classList.add('cell-moves')
+            // cellRight.style.backgroundColor = 'red'
+            cellLeft.classList.add('cell-moves')
+            // cellLeft.style.backgroundColor = 'red'
         }
     }
 }
@@ -108,7 +112,7 @@ function verifyChecker() {
     // }
 }
 
-//VERIFICAR SE O JOGADOR VENCEU APÓS A JOGADA E FAZER A TROCA DE TURNOS (FEITO)
+//FAZER A TROCA DE TURNOS (FEITO)
 
 function endTurn() {
     let spanTurn1 = document.getElementById('turn1')
@@ -125,45 +129,45 @@ function endTurn() {
     }
 }
 
+
+//VERIFICAR SE O JOGADOR GANHOU
 function checkWinner() {
     if (pointsFirst == vitoryPoints || pointsSecond == vitoryPoints) {
         if (pointsFirst == vitoryPoints) {
-            winner = firstName
+            winner = players[0]
         } else if (pointsSecond == vitoryPoints) {
-            winner = secondName
+            winner = players[1]
         }
         alert(`FIM DO JOGO! O VENCEDOR É ${winner}`)
     }
 }
 
-function movePiece(piece) {
-    
+function movePiece(cell) {
+    let piece = document.createElement('img')
+    if (turn == 1) {
+        piece.src = 'images/bluePiece.png'
+        cell.append(piece)
+    }else{
+        piece.src = 'images/redPiece.png'
+        cell.append(piece)
+    }
 }
 
 //EFETUAR JOGADA E VERIFICAR SE O JOGADOR VENCEU
 
 for (let i = 0; i < bluePieces.length; i++) {
-    bluePieces[i].addEventListener('click', function movePiece() {
+    bluePieces[i].addEventListener('click', function () {
 
         if (turn == 1) {
             verifyPositions(bluePieces[i]);
-            //MOVER A PEÇA
-
-            //movePiece(bluePieces[i]);
-
-            // verifyChecker();
-
-            checkWinner();
-
-            endTurn();
         } else {
-            alert(`É a vez de ${players[1]}`)
+            alert(`É a vez de ${players[0]}`)
         }
     })
 }
 
 for (let i = 0; i < redPieces.length; i++) {
-    redPieces[i].addEventListener('click', function movePiece() {
+    redPieces[i].addEventListener('click', function () {
 
         if (turn == 2) {
             verifyPositions(redPieces[i]);
@@ -175,7 +179,22 @@ for (let i = 0; i < redPieces.length; i++) {
             checkWinner();
             endTurn();
         } else {
-            alert(`É a vez de ${players[0]}`)
+            alert(`É a vez de ${players[1]}`)
         }       
+    })
+}
+
+for (let i = 0; i < cells.length; i++) {
+    cells[i].addEventListener('click', function () {
+
+            //MOVER A PEÇA
+
+            movePiece(cells[i]);
+
+            // verifyChecker();
+
+            checkWinner();
+
+            endTurn();
     })
 }

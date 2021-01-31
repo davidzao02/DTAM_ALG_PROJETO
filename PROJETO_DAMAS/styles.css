@@ -92,3 +92,16 @@ p {
 .logo{
     width: 50px;
 }
+
+.footer-logo{
+    width: 70px;
+    float: right;
+}
+
+.cell-selected{
+    background-color: darkred;
+}
+
+.cell-moves{
+    background-color: red;
+}
