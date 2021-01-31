@@ -17,17 +17,11 @@ table {
 }
 
 tr {
-    height: 100px;
+    height: 70px;
 }
 
-<<<<<<< HEAD
 td{
-    width: 50px;
-=======
-td {
-    width: 100px;
->>>>>>> f5cdbb85b71e60729dc301b2197eaf44df31c4bb
-    cursor: pointer;
+    width: 70px;
 }
 
 .white {
