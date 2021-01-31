@@ -8,12 +8,12 @@ table {
 }
 
 td {
-    padding: 20px;
+    padding: 4px;
 }
 
 table {
-    width: 800px;
-    height: 800px;
+    width: 490px;
+    height: 490px;
 }
 
 tr {
@@ -41,7 +41,7 @@ body {
 }
 
 .margin-bottom {
-    margin-bottom: 100px;
+    margin-bottom: 30px;
 }
 
 .center {
@@ -49,14 +49,16 @@ body {
     margin-right: auto;
 }
 
-#firstPlayer,
-#firstPlayerPoints {
+#player1,
+#player1Points,
+#turn1 {
     color: blue;
 }
 
 
-#secondPlayer,
-#secondPlayerPoints {
+#player2,
+#player2Points,
+#turn2 {
     color: red;
 }
 
@@ -65,4 +67,28 @@ div.content {
 }
 th {
     text-align: center;
+}
+body {
+    background-image: linear-gradient(to bottom right, black, grey);
+    background-attachment: fixed;
+}
+footer {
+    background-color: rgb(33, 37, 41);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+h1, h2, h3, p{
+    color: white;
+}
+
+p {
+    text-align: justify;
+}
+
+
+.logo{
+    width: 50px;
 }
