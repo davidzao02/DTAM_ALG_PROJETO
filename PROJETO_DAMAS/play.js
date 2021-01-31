@@ -3,7 +3,7 @@ let vitoryPoints = 12,
     pointsSecond = 0,
     winner = '',
     turn = 1,
-    players = [];
+    players = []
 
 let map = [
     [null, 2, null, 2, null, 2, null, 2],
@@ -18,7 +18,7 @@ let map = [
 
 let bluePieces = document.getElementsByName('bluePiece')
 let redPieces = document.getElementsByName('redPiece')
-let cells = document.getElementsByClassName('cell-moves')
+let table = document.getElementById('board')
 
 fillTable();
 getPlayers();
@@ -36,8 +36,6 @@ function getPlayers() {
 //CRIAR TABULEIRO E POSICIONAR PEÇAS (FEITO)
 
 function fillTable() {
-    let table = document.getElementById('board')
-
     for (let i = 0; i < map.length; i++) {
         let line = document.createElement('tr')
         line.id = `linha_${i}`
@@ -81,20 +79,28 @@ function verifyPositions(piece) {
     let col = parseInt(cell.id.substring(7, 8))
 
     if (turn == 1) {
-        if (map[line - 1][col - 1] == 0) {
-            let cellRight = document.getElementById(`cell_${line - 1}_${col - 1}`)
-            let cellLeft = document.getElementById(`cell_${line - 1}_${col + 1}`)
-            cellRight.style.backgroundColor = 'red'
-            cellLeft.style.backgroundColor = 'red'
-        }
-    }else{
-        if (map[line + 1][col + 1] == 0) {
+        if (map[line - 1][col - 1] == 0 && map[line - 1][col + 1] == 0) {
             let cellRight = document.getElementById(`cell_${line - 1}_${col - 1}`)
             let cellLeft = document.getElementById(`cell_${line - 1}_${col + 1}`)
             cellRight.classList.add('cell-moves')
-            // cellRight.style.backgroundColor = 'red'
             cellLeft.classList.add('cell-moves')
-            // cellLeft.style.backgroundColor = 'red'
+        } else if (map[line - 1][col - 1] == 2 || map[line - 1][col + 1] == 2) {
+            let cellRight = document.getElementById(`cell_${line - 3}_${col - 2}`)
+            let cellLeft = document.getElementById(`cell_${line - 3}_${col + 2}`)
+            cellRight.classList.add('cell-moves')
+            cellLeft.classList.add('cell-moves')
+        }
+    } else {
+        if (map[line + 1][col + 1] == 0 && map[line + 1][col - 1] == 0) {
+            let cellRight = document.getElementById(`cell_${line - 1}_${col - 1}`)
+            let cellLeft = document.getElementById(`cell_${line - 1}_${col + 1}`)
+            cellRight.classList.add('cell-moves')
+            cellLeft.classList.add('cell-moves')
+        } else if (map[line + 1][col + 1] == 1 || map[line + 1][col - 1] == 1) {
+            let cellRight = document.getElementById(`cell_${line - 3}_${col - 2}`)
+            let cellLeft = document.getElementById(`cell_${line - 3}_${col + 2}`)
+            cellRight.classList.add('cell-moves')
+            cellLeft.classList.add('cell-moves')
         }
     }
 }
@@ -102,14 +108,7 @@ function verifyPositions(piece) {
 //VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO)
 
 function verifyChecker() {
-
-    // if (turn == 1) {
-    //     bluePiece.forEach(pieces => {
-    //         if (piece.id == '') {
-
-    //         }
-    //     });
-    // }
+    //FAZER
 }
 
 //FAZER A TROCA DE TURNOS (FEITO)
@@ -134,22 +133,42 @@ function endTurn() {
 function checkWinner() {
     if (pointsFirst == vitoryPoints || pointsSecond == vitoryPoints) {
         if (pointsFirst == vitoryPoints) {
+
             winner = players[0]
         } else if (pointsSecond == vitoryPoints) {
             winner = players[1]
         }
-        alert(`FIM DO JOGO! O VENCEDOR É ${winner}`)
+        let restart = confirm(`GAME WON BY ${winner}! RESTART?`)
+
+        if (restart) {
+            location.reload()
+        } else {
+            location.replace('index.html')
+        }
     }
 }
 
-function movePiece(cell) {
+function movePiece(line, col) {
+    let lastCell = document.getElementsByClassName('cell-selected')
+
     let piece = document.createElement('img')
+
+    let cell = document.getElementById(`cell_${line}_${col}`)
+
     if (turn == 1) {
         piece.src = 'images/bluePiece.png'
+        map[line][col] = 1
         cell.append(piece)
-    }else{
+    } else {
         piece.src = 'images/redPiece.png'
+        map[line][col] = 2
         cell.append(piece)
+    }
+
+    let redCells = document.getElementsByClassName('cell-moves')
+
+    for (let i = 0; i < redCells.length; i++) {
+        redCells[i].classList.remove('cell-moves')
     }
 }
 
@@ -171,30 +190,25 @@ for (let i = 0; i < redPieces.length; i++) {
 
         if (turn == 2) {
             verifyPositions(redPieces[i]);
-            //MOVER A PEÇA
-
-            // movePiece();
-
-            // verifyChecker();
-            checkWinner();
-            endTurn();
         } else {
             alert(`É a vez de ${players[1]}`)
-        }       
+        }
     })
 }
 
-for (let i = 0; i < cells.length; i++) {
-    cells[i].addEventListener('click', function () {
+table.addEventListener('click', (ev) => {
+    let cell = ev.target.cellIndex
+    let row = ev.target.parentElement.rowIndex
 
-            //MOVER A PEÇA
+    let selectedCells = document.getElementsByClassName('cell-selected')
 
-            movePiece(cells[i]);
+    if (selectedCells != '') {
+        movePiece(row, cell)
 
-            // verifyChecker();
+        verifyChecker();
 
-            checkWinner();
+        endTurn();
 
-            endTurn();
-    })
-}
+        checkWinner();
+    }
+})
