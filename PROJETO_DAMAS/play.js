@@ -259,7 +259,7 @@ function movePiece(line, col) {
             piece.src = 'images/bluePiece.png'
             piece.name = 'bluePiece'
             map[lastLine][lastCol] = 0
-            if (map[line - 1][col - 1] == 2) {
+            if (map[line + 1][col + 1] == 2) {
                 enemyCell = document.getElementById(`cell_${line - 1}_${col - 1}`)
                 enemyCell.innerHTML = ''
                 pointsFirst++;
@@ -270,7 +270,7 @@ function movePiece(line, col) {
             piece.src = 'images/redPiece.png'
             piece.name = 'redPiece'
             map[lastLine][lastCol] = 0
-            if (map[line + 1][col + 1] == 1) {
+            if (map[line - 1][col - 1] == 1) {
                 enemyCell = document.getElementById(`cell_${line + 1}_${col + 1}`)
                 enemyCell.innerHTML = ''
                 pointsSecond++;
