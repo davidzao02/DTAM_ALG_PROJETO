@@ -3,7 +3,9 @@ let vitoryPoints = 12,
     pointsSecond = 0,
     winner = '',
     turn = 1,
-    players = []
+    players = [],
+    existWinner,
+    audio
 
 let map = [
     [null, 2, null, 2, null, 2, null, 2],
@@ -19,6 +21,13 @@ let map = [
 let bluePieces = document.getElementsByName('bluePiece')
 let redPieces = document.getElementsByName('redPiece')
 let table = document.getElementById('board')
+
+if (typeof (Storage) !== undefined) {
+    audio = localStorage.getItem('sound')
+    theme = localStorage.getItem('theme')
+}else{
+    alert(`THIS BROWSER DOESN'T SUPPORT LOCAL STORAGE!`)
+}
 
 fillTable();
 getPlayers();
@@ -72,7 +81,6 @@ function fillTable() {
 function verifyPositions(piece) {
     let cell = piece.parentElement
     cell.classList.add('cell-selected')
-    // cell.style.backgroundColor = 'darkRed'
 
     let line = parseInt(cell.id.substring(5, 6))
 
@@ -92,13 +100,13 @@ function verifyPositions(piece) {
         }
     } else {
         if (map[line + 1][col + 1] == 0 && map[line + 1][col - 1] == 0) {
-            let cellRight = document.getElementById(`cell_${line - 1}_${col - 1}`)
-            let cellLeft = document.getElementById(`cell_${line - 1}_${col + 1}`)
+            let cellRight = document.getElementById(`cell_${line + 1}_${col - 1}`)
+            let cellLeft = document.getElementById(`cell_${line + 1}_${col + 1}`)
             cellRight.classList.add('cell-moves')
             cellLeft.classList.add('cell-moves')
         } else if (map[line + 1][col + 1] == 1 || map[line + 1][col - 1] == 1) {
-            let cellRight = document.getElementById(`cell_${line - 3}_${col - 2}`)
-            let cellLeft = document.getElementById(`cell_${line - 3}_${col + 2}`)
+            let cellRight = document.getElementById(`cell_${line + 3}_${col - 2}`)
+            let cellLeft = document.getElementById(`cell_${line + 3}_${col + 2}`)
             cellRight.classList.add('cell-moves')
             cellLeft.classList.add('cell-moves')
         }
@@ -107,9 +115,16 @@ function verifyPositions(piece) {
 
 //VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO)
 
-function verifyChecker() {
-    //FAZER
-}
+// function verifyChecker() {
+//     for (let i = 0; i < bluePieces.length; i++) {
+//         let cell = bluePieces[i].parentElement
+
+//         if (cell.id == ) {
+            
+//         }
+        
+//     }
+// }
 
 //FAZER A TROCA DE TURNOS (FEITO)
 
@@ -133,11 +148,30 @@ function endTurn() {
 function checkWinner() {
     if (pointsFirst == vitoryPoints || pointsSecond == vitoryPoints) {
         if (pointsFirst == vitoryPoints) {
-
             winner = players[0]
         } else if (pointsSecond == vitoryPoints) {
             winner = players[1]
         }
+
+        if (typeof (Storage) !== undefined) {
+            if (localStorage.getItem('winners') === null) {
+
+            } else {
+                let winners = JSON.parse(localStorage.getItem('winners'))
+
+                for (let i = 0; i < winners.length; i++) {
+                    if (winners[i][0] == winner) {
+                        existWinner = true
+                    }
+                }
+                if (existWinner) {
+
+                }
+            }
+        } else {
+            alert(`THIS BROWSER DOESN'T SUPPORT LOCAL STORAGE!`)
+        }
+
         let restart = confirm(`GAME WON BY ${winner}! RESTART?`)
 
         if (restart) {
@@ -149,30 +183,41 @@ function checkWinner() {
 }
 
 function movePiece(line, col) {
-    let lastCell = document.getElementsByClassName('cell-selected')
-
-    let piece = document.createElement('img')
 
     let cell = document.getElementById(`cell_${line}_${col}`)
 
-    if (turn == 1) {
-        piece.src = 'images/bluePiece.png'
-        map[line][col] = 1
-        cell.append(piece)
-    } else {
-        piece.src = 'images/redPiece.png'
-        map[line][col] = 2
-        cell.append(piece)
-    }
+    if (cell.classList.contains('cell-moves')) {
+        let lastCell = document.getElementsByClassName('cell-selected')
+        let sound = document.getElementById('movePiece')
+        let piece = document.createElement('img')
 
-    let redCells = document.getElementsByClassName('cell-moves')
+        lastCell[0].innerHTML = ''
 
-    for (let i = 0; i < redCells.length; i++) {
-        redCells[i].classList.remove('cell-moves')
+        lastCell[0].classList.remove('cell-selected');
+
+        if (turn == 1) {
+            piece.src = 'images/bluePiece.png'
+            map[line][col] = 1
+            cell.append(piece)
+        } else {
+            piece.src = 'images/redPiece.png'
+            map[line][col] = 2
+            cell.append(piece)
+        }
+
+        let redCells = document.getElementsByClassName('cell-moves')
+
+        for (let i = 0; i < redCells.length; i++) {
+            redCells[i].classList.remove('cell-moves')
+        }
+
+        if (audio) {
+            sound.play();   
+        }
     }
 }
 
-//EFETUAR JOGADA E VERIFICAR SE O JOGADOR VENCEU
+//VERIFICAR QUAIS SÃO AS POSSIBILIDADES DE JOGADA APÓS O CLIQUE NUMA PEÇA
 
 for (let i = 0; i < bluePieces.length; i++) {
     bluePieces[i].addEventListener('click', function () {
@@ -196,19 +241,23 @@ for (let i = 0; i < redPieces.length; i++) {
     })
 }
 
+//EFETUAR JOGADA APÓS CLIQUE NUMA CÉLULA DO TABULEIRO
+
 table.addEventListener('click', (ev) => {
-    let cell = ev.target.cellIndex
+    let col = ev.target.cellIndex
     let row = ev.target.parentElement.rowIndex
 
-    let selectedCells = document.getElementsByClassName('cell-selected')
+    let cell = document.getElementById(`cell_${row}_${col}`)
 
-    if (selectedCells != '') {
-        movePiece(row, cell)
+    if (cell.classList.contains('cell-moves')) {
+        movePiece(row, col)
 
-        verifyChecker();
+        // verifyChecker();
 
         endTurn();
 
         checkWinner();
+    } else {
+        alert('MOVE TO A VALID POSITION!')
     }
 })

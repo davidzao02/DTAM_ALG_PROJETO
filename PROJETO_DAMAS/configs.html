@@ -48,6 +48,47 @@
             </ul>
         </div>
     </nav>
+
+    <div class="containter-fluid">
+        <h1>Configurations</h1>
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-8">
+                <form>
+                    <label>
+                        <h4>Sound</h4>
+                    </label>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="radioAtivado" name="radiosSound" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="radioAtivado">Enabled</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="radioDesativado" name="radiosSound" class="custom-control-input">
+                        <label class="custom-control-label" for="radioDesativado">Disabled</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-3"></div>
+        </div>
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-8">
+                <form>
+                    <label for="dpTheme">
+                        <h4>Theme</h4>
+                    </label>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Tema
+                        </button>
+                        
+                      </div>
+                </form>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+
     <div class="container-fluid">
         <footer>
             <a href="https://www.esmad.ipp.pt/" target="_blank"><img src="./images/ESMAD.png"
@@ -57,6 +98,12 @@
         </footer>
     </div>
     <script src="configs.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+        </script>
 </body>
 
 </html>

@@ -20,7 +20,7 @@ tr {
     height: 70px;
 }
 
-td{
+td {
     width: 70px;
 }
 
@@ -32,8 +32,12 @@ td{
     background-color: #000000;
 }
 
-.selected {
-    background-color: #FF0000;
+.brown {
+    background-color: brown;
+}
+
+.beige {
+    background-color: beige;
 }
 
 body {
@@ -65,13 +69,16 @@ body {
 div.content {
     margin-top: 30px;
 }
+
 th {
     text-align: center;
 }
+
 body {
     background-image: linear-gradient(to bottom right, black, grey);
     background-attachment: fixed;
 }
+
 footer {
     background-color: rgb(33, 37, 41);
     position: fixed;
@@ -80,7 +87,12 @@ footer {
     width: 100%;
 }
 
-h1, h2, h3, p{
+h1,
+h2,
+h3,
+p,
+label,
+span {
     color: white;
 }
 
@@ -89,19 +101,19 @@ p {
 }
 
 
-.logo{
+.logo {
     width: 50px;
 }
 
-.footer-logo{
+.footer-logo {
     width: 70px;
     float: right;
 }
 
-.cell-selected{
+.cell-selected {
     background-color: darkred;
 }
 
-.cell-moves{
+.cell-moves {
     background-color: red;
 }
