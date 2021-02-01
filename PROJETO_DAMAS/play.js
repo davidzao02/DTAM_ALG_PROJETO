@@ -123,9 +123,9 @@ function verifyPositions(piece) {
         if (map[line - 1][col - 1] == 0 && map[line - 1][col + 1] == 0) {
             cellRight.classList.add('cell-moves')
             cellLeft.classList.add('cell-moves')
-        } else if (map[line - 1][col - 1] == undefined && map[line - 1][col + 1] == 0) {
+        } else if (col == 0 && map[line - 1][col + 1] == 0) {
             cellRight.classList.add('cell-moves')
-        } else if (map[line - 1][col - 1] == 0 && map[line - 1][col + 1] == undefined) {
+        } else if (map[line - 1][col - 1] == 0 && col == 7) {
             cellLeft.classList.add('cell-moves')
         } else if (map[line - 1][col - 1] == 2) {
             cellLeft = document.getElementById(`cell_${line - 2}_${col + 2}`)
@@ -140,8 +140,10 @@ function verifyPositions(piece) {
         if (map[line + 1][col + 1] == 0 && map[line + 1][col - 1] == 0) {
             cellRight.classList.add('cell-moves')
             cellLeft.classList.add('cell-moves')
-        } else if (map[line + 1][col + 1] == undefined && map[line + 1][col - 1] == 0) {
+        } else if (col == 7 && map[line + 1][col - 1] == 0) {
             cellLeft.classList.add('cell-moves')
+        } else if (col == 0 && map[line + 1][col - 1] == 0) {
+            cellRight.classList.add('cell-moves')
         } else if (map[line + 1][col + 1] == 1) {
             cellRight = document.getElementById(`cell_${line + 2}_${col - 2}`)
             cellRight.classList.add('cell-moves')
@@ -238,6 +240,7 @@ function movePiece(line, col) {
     let cell = document.getElementById(`cell_${line}_${col}`)
 
     if (cell.classList.contains('cell-moves')) {
+        let enemyCell
         let lastCell = document.getElementsByClassName('cell-selected')[0]
         let sound = document.getElementById('movePiece')
         let piece = document.createElement('img')
@@ -254,12 +257,24 @@ function movePiece(line, col) {
 
         if (turn == 1) {
             piece.src = 'images/bluePiece.png'
+            piece.name = 'bluePiece'
             map[lastLine][lastCol] = 0
+            if (map[line - 1][col - 1] == 2) {
+                enemyCell = document.getElementById(`cell_${line - 1}_${col - 1}`)
+                enemyCell.innerHTML = ''
+                pointsFirst++;
+            }
             map[line][col] = 1
             cell.append(piece)
         } else {
             piece.src = 'images/redPiece.png'
+            piece.name = 'redPiece'
             map[lastLine][lastCol] = 0
+            if (map[line + 1][col + 1] == 1) {
+                enemyCell = document.getElementById(`cell_${line + 1}_${col + 1}`)
+                enemyCell.innerHTML = ''
+                pointsSecond++;
+            }
             map[line][col] = 2
             cell.append(piece)
         }
