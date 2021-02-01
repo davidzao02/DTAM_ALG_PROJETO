@@ -27,15 +27,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="play.html">Play</a>
                 </li>
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Jogar
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="jogar1v1.html">Jogar 1 v 1</a>
-                        <a class="dropdown-item" href="jogar1vCOM.html">Jogar 1 vs COM</a>
-                    </div> -->
                 <li class="nav-item">
                     <a class="nav-link" href="ranking.html">Ranking</a>
                 </li>
@@ -49,11 +40,13 @@
         </div>
     </nav>
 
+    <div class="margin-bottom"></div>
+
     <div class="containter-fluid">
-        <h1>Configurations</h1>
+        <h2>Configurations</h2>
         <div class="row">
-            <div class="col-1"></div>
-            <div class="col-8">
+            <div class="col-3"></div>
+            <div class="col-3">
                 <form>
                     <label>
                         <h4>Sound</h4>
@@ -68,21 +61,15 @@
                     </div>
                 </form>
             </div>
-            <div class="col-3"></div>
-        </div>
-        <div class="row">
-            <div class="col-1"></div>
-            <div class="col-8">
+            <div class="col-3">
                 <form>
                     <label for="dpTheme">
                         <h4>Theme</h4>
                     </label>
-                    <div class="dropdown">
-                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Tema
-                        </button>
-                        
-                      </div>
+                    <select name="slTheme" id="slTheme" class="form-control w-50">
+                        <option value="1" selected>Black/White</option>
+                        <option value="2">Brown/Beige</option>
+                    </select>
                 </form>
             </div>
             <div class="col-3"></div>

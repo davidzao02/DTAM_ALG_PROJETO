@@ -5,7 +5,9 @@ let vitoryPoints = 12,
     turn = 1,
     players = [],
     existWinner,
-    audio
+    primaryColor,
+    secundaryColor,
+    winners
 
 let map = [
     [null, 2, null, 2, null, 2, null, 2],
@@ -22,18 +24,36 @@ let bluePieces = document.getElementsByName('bluePiece')
 let redPieces = document.getElementsByName('redPiece')
 let table = document.getElementById('board')
 
-if (typeof (Storage) !== undefined) {
-    audio = localStorage.getItem('sound')
-    theme = localStorage.getItem('theme')
-}else{
-    alert(`THIS BROWSER DOESN'T SUPPORT LOCAL STORAGE!`)
-}
-
+getTheme();
 fillTable();
 getPlayers();
 
-//OBTER NOME DOS JOGADORES (FEITO)
+//OBTER CONFIGURAÇÕES
+function getTheme() {
+    if (typeof (Storage) !== undefined) {
+        theme = localStorage.getItem('theme')
 
+        if (theme == 1) {
+            primaryColor = 'black'
+            secondaryColor = 'white'
+        } else {
+            primaryColor = 'brown'
+            secondaryColor = 'beige'
+        }
+    } else {
+        alert(`THIS BROWSER DOESN'T SUPPORT LOCAL STORAGE!`)
+    }
+}
+
+function getWinners(){
+    if (typeof (Storage) !== undefined) {
+        winners = JSON.stringify(localStorage.getItem('winners'));
+    } else {
+        alert(`THIS BROWSER DOESN'T SUPPORT LOCAL STORAGE!`)
+    }
+}
+
+//OBTER NOME DOS JOGADORES (FEITO)
 function getPlayers() {
     for (let i = 0; i < 2; i++) {
         let text = document.getElementById(`player${i+1}`)
@@ -43,7 +63,6 @@ function getPlayers() {
 }
 
 //CRIAR TABULEIRO E POSICIONAR PEÇAS (FEITO)
-
 function fillTable() {
     for (let i = 0; i < map.length; i++) {
         let line = document.createElement('tr')
@@ -54,21 +73,21 @@ function fillTable() {
             if (map[i][j] == 1) {
                 let bluePiece = document.createElement('img')
                 bluePiece.src = 'images/bluePiece.png'
-                //bluePiece.id = `bluePiece_${i+1}_${j+1}`
+                bluePiece.id = `bluePiece_${i+1}_${j+1}`
                 bluePiece.name = 'bluePiece'
                 col.append(bluePiece)
-                col.classList.add('black')
+                col.classList.add(primaryColor)
             } else if (map[i][j] == 2) {
                 let redPiece = document.createElement('img')
                 redPiece.src = 'images/redPiece.png'
-                //redPiece.id = `redPiece_${i+1}_${j+1}`
+                redPiece.id = `redPiece_${i+1}_${j+1}`
                 redPiece.name = 'redPiece'
-                col.classList.add('black')
+                col.classList.add(primaryColor)
                 col.append(redPiece);
             } else if (map[i][j] == 0) {
-                col.classList.add('black')
+                col.classList.add(primaryColor)
             } else if (map[i][j] == null) {
-                col.classList.add('white')
+                col.classList.add(secondaryColor)
             }
             line.append(col)
         }
@@ -77,57 +96,90 @@ function fillTable() {
 }
 
 //VERIFICAR SE É POSSIVEL MOVER A PEÇA
-
 function verifyPositions(piece) {
+    let selectedCells = document.getElementsByClassName('cell-selected')
+    let redCells = document.getElementsByClassName('cell-moves')
+    if (selectedCells !== null || redCells !== null) {
+        while (selectedCells.length >= 1) {
+            selectedCells[0].classList.remove('cell-selected')
+        }
+        while (redCells.length >= 1) {
+            redCells[0].classList.remove('cell-moves')
+        }
+    }
+
     let cell = piece.parentElement
     cell.classList.add('cell-selected')
+
+    console.log(cell.id);
 
     let line = parseInt(cell.id.substring(5, 6))
 
     let col = parseInt(cell.id.substring(7, 8))
 
     if (turn == 1) {
+        let cellRight = document.getElementById(`cell_${line - 1}_${col - 1}`)
+        let cellLeft = document.getElementById(`cell_${line - 1}_${col + 1}`)
         if (map[line - 1][col - 1] == 0 && map[line - 1][col + 1] == 0) {
-            let cellRight = document.getElementById(`cell_${line - 1}_${col - 1}`)
-            let cellLeft = document.getElementById(`cell_${line - 1}_${col + 1}`)
             cellRight.classList.add('cell-moves')
             cellLeft.classList.add('cell-moves')
-        } else if (map[line - 1][col - 1] == 2 || map[line - 1][col + 1] == 2) {
-            let cellRight = document.getElementById(`cell_${line - 3}_${col - 2}`)
-            let cellLeft = document.getElementById(`cell_${line - 3}_${col + 2}`)
+        } else if (map[line - 1][col - 1] == undefined && map[line - 1][col + 1] == 0) {
             cellRight.classList.add('cell-moves')
+        } else if (map[line - 1][col - 1] == 0 && map[line - 1][col + 1] == undefined) {
             cellLeft.classList.add('cell-moves')
+        } else if (map[line - 1][col - 1] == 2) {
+            cellLeft = document.getElementById(`cell_${line - 2}_${col + 2}`)
+            cellLeft.classList.add('cell-moves')
+        } else if (map[line - 1][col + 1] == 2) {
+            cellRight = document.getElementById(`cell_${line - 2}_${col - 2}`)
+            cellRight.classList.add('cell-moves')
         }
     } else {
+        let cellRight = document.getElementById(`cell_${line + 1}_${col - 1}`)
+        let cellLeft = document.getElementById(`cell_${line + 1}_${col + 1}`)
         if (map[line + 1][col + 1] == 0 && map[line + 1][col - 1] == 0) {
-            let cellRight = document.getElementById(`cell_${line + 1}_${col - 1}`)
-            let cellLeft = document.getElementById(`cell_${line + 1}_${col + 1}`)
             cellRight.classList.add('cell-moves')
             cellLeft.classList.add('cell-moves')
-        } else if (map[line + 1][col + 1] == 1 || map[line + 1][col - 1] == 1) {
-            let cellRight = document.getElementById(`cell_${line + 3}_${col - 2}`)
-            let cellLeft = document.getElementById(`cell_${line + 3}_${col + 2}`)
+        } else if (map[line + 1][col + 1] == undefined && map[line + 1][col - 1] == 0) {
+            cellLeft.classList.add('cell-moves')
+        } else if (map[line + 1][col + 1] == 1) {
+            cellRight = document.getElementById(`cell_${line + 2}_${col - 2}`)
             cellRight.classList.add('cell-moves')
+        } else if (map[line + 1][col - 1] == 1) {
+            cellLeft = document.getElementById(`cell_${line + 2}_${col + 2}`)
             cellLeft.classList.add('cell-moves')
         }
     }
 }
 
-//VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO)
-
-// function verifyChecker() {
-//     for (let i = 0; i < bluePieces.length; i++) {
-//         let cell = bluePieces[i].parentElement
-
-//         if (cell.id == ) {
-            
-//         }
-        
-//     }
-// }
+//VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO) (FEITO)
+function verifyQueen() {
+    let cell
+    let queen = document.createElement('img')
+    if (turn == 1) {
+        for (let i = 0; i < map[0].length; i++) {
+            if (map[0][i] == 1) {
+                cell = document.getElementById(`cell_0_${i}`)
+                cell.innerHTML = '';
+                queen.src = './images/bluePieceQueen.png';
+                queen.name = 'bluePiecesQueen'
+                cell.append(queen);
+            }
+        }   
+    }else{
+        for (let i = 0; i < map[7].length; i++) {
+            if (map[7][i] == 2) {
+                cell = document.getElementById(`cell_7_${i}`)
+                cell.innerHTML = '';
+                queen.src = './images/redPieceQueen.png';
+                queen.name = 'redPiecesQueen'
+                cell.append(queen);
+            }
+        }
+    }
+}
 
 //FAZER A TROCA DE TURNOS (FEITO)
-
 function endTurn() {
     let spanTurn1 = document.getElementById('turn1')
     let spanTurn2 = document.getElementById('turn2')
@@ -143,7 +195,6 @@ function endTurn() {
     }
 }
 
-
 //VERIFICAR SE O JOGADOR GANHOU
 function checkWinner() {
     if (pointsFirst == vitoryPoints || pointsSecond == vitoryPoints) {
@@ -157,7 +208,7 @@ function checkWinner() {
             if (localStorage.getItem('winners') === null) {
 
             } else {
-                let winners = JSON.parse(localStorage.getItem('winners'))
+                winners = JSON.parse(localStorage.getItem('winners'))
 
                 for (let i = 0; i < winners.length; i++) {
                     if (winners[i][0] == winner) {
@@ -187,38 +238,45 @@ function movePiece(line, col) {
     let cell = document.getElementById(`cell_${line}_${col}`)
 
     if (cell.classList.contains('cell-moves')) {
-        let lastCell = document.getElementsByClassName('cell-selected')
+        let lastCell = document.getElementsByClassName('cell-selected')[0]
         let sound = document.getElementById('movePiece')
         let piece = document.createElement('img')
 
-        lastCell[0].innerHTML = ''
+        lastCell.innerHTML = ''
 
-        lastCell[0].classList.remove('cell-selected');
+        lastCell.classList.remove('cell-selected');
+
+        console.log(lastCell.id);
+
+        let lastLine = parseInt(lastCell.id.substring(5, 6))
+
+        let lastCol = parseInt(lastCell.id.substring(7, 8))
 
         if (turn == 1) {
             piece.src = 'images/bluePiece.png'
+            map[lastLine][lastCol] = 0
             map[line][col] = 1
             cell.append(piece)
         } else {
             piece.src = 'images/redPiece.png'
+            map[lastLine][lastCol] = 0
             map[line][col] = 2
             cell.append(piece)
         }
 
         let redCells = document.getElementsByClassName('cell-moves')
 
-        for (let i = 0; i < redCells.length; i++) {
-            redCells[i].classList.remove('cell-moves')
+        while (redCells.length > 0) {
+            redCells[0].classList.remove('cell-moves')
         }
 
-        if (audio) {
-            sound.play();   
+        if (localStorage.getItem('sound')) {
+            sound.play();
         }
     }
 }
 
 //VERIFICAR QUAIS SÃO AS POSSIBILIDADES DE JOGADA APÓS O CLIQUE NUMA PEÇA
-
 for (let i = 0; i < bluePieces.length; i++) {
     bluePieces[i].addEventListener('click', function () {
 
@@ -241,8 +299,7 @@ for (let i = 0; i < redPieces.length; i++) {
     })
 }
 
-//EFETUAR JOGADA APÓS CLIQUE NUMA CÉLULA DO TABULEIRO
-
+//EFETUAR JOGADA APÓS CLIQUE NUMA CÉLULA DO TABULEIRO (FEITO)
 table.addEventListener('click', (ev) => {
     let col = ev.target.cellIndex
     let row = ev.target.parentElement.rowIndex
@@ -252,7 +309,7 @@ table.addEventListener('click', (ev) => {
     if (cell.classList.contains('cell-moves')) {
         movePiece(row, col)
 
-        // verifyChecker();
+        verifyQueen();
 
         endTurn();
 
