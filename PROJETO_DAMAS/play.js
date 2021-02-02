@@ -4,7 +4,6 @@ let vitoryPoints = 12,
     winner = '',
     turn = 1,
     players = [],
-    existWinner,
     primaryColor,
     secundaryColor,
     winners
@@ -25,10 +24,11 @@ let redPieces = document.getElementsByName('redPiece')
 let table = document.getElementById('board')
 
 getTheme();
+getWinners();
 fillTable();
 getPlayers();
 
-//OBTER CONFIGURAÇÕES
+//OBTER CONFIGURAÇÕES (FEITO)
 function getTheme() {
     if (typeof (Storage) !== undefined) {
         theme = localStorage.getItem('theme')
@@ -45,9 +45,10 @@ function getTheme() {
     }
 }
 
-function getWinners(){
+function getWinners() {
     if (typeof (Storage) !== undefined) {
-        winners = JSON.stringify(localStorage.getItem('winners'));
+        winners = JSON.parse(localStorage.getItem('winners'));
+        console.log(winners);
     } else {
         alert(`THIS BROWSER DOESN'T SUPPORT LOCAL STORAGE!`)
     }
@@ -92,6 +93,88 @@ function fillTable() {
             line.append(col)
         }
         table.append(line)
+    }
+}
+
+//VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO) (FEITO)
+function verifyQueen() {
+    let cell
+    let queen = document.createElement('img')
+    if (turn == 1) {
+        for (let i = 0; i < map[0].length; i++) {
+            if (map[0][i] == 1) {
+                cell = document.getElementById(`cell_0_${i}`)
+                cell.innerHTML = '';
+                queen.src = './images/bluePieceQueen.png';
+                queen.name = 'bluePieceQueen'
+                cell.append(queen);
+            }
+        }
+    } else {
+        for (let i = 0; i < map[7].length; i++) {
+            if (map[7][i] == 2) {
+                cell = document.getElementById(`cell_7_${i}`)
+                cell.innerHTML = '';
+                queen.src = './images/redPieceQueen.png';
+                queen.name = 'redPieceQueen'
+                cell.append(queen);
+            }
+        }
+    }
+}
+
+//FAZER A TROCA DE TURNOS (FEITO)
+function endTurn() {
+    let spanTurn1 = document.getElementById('turn1')
+    let spanTurn2 = document.getElementById('turn2')
+
+    if (turn == 1) {
+        turn = 2
+        spanTurn1.hidden = false;
+        spanTurn2.hidden = true;
+    } else {
+        turn = 1
+        spanTurn1.hidden = true;
+        spanTurn2.hidden = false;
+    }
+}
+
+//VERIFICAR SE O JOGADOR GANHOU (FEITO)
+function checkWinner() {
+    if (pointsFirst == vitoryPoints || pointsSecond == vitoryPoints) {
+        if (pointsFirst == vitoryPoints) {
+            winner = players[0]
+        } else if (pointsSecond == vitoryPoints) {
+            winner = players[1]
+        }
+
+        if (typeof (Storage) !== undefined) {
+            if (localStorage.getItem('winners') === null) {
+                let winnerInfo = {
+                    name: winner,
+                    wins: 1
+                }
+                winners.push(winnerInfo)
+            } else {
+                for (let i = 0; i < winners.length; i++) {
+                    if (winners[i].name == winner) {
+                        winners[i].wins++;
+                    }
+                }
+            }
+
+            localStorage.setItem('winners', winners.stringify());
+        } else {
+            alert(`THIS BROWSER DOESN'T SUPPORT LOCAL STORAGE!`)
+        }
+
+        let restart = confirm(`GAME WON BY ${winner}! RESTART?`)
+
+        if (restart) {
+            location.reload()
+        } else {
+            location.replace('index.html')
+        }
     }
 }
 
@@ -145,96 +228,16 @@ function verifyPositions(piece) {
         } else if (col == 0 && map[line + 1][col - 1] == 0) {
             cellRight.classList.add('cell-moves')
         } else if (map[line + 1][col + 1] == 1) {
-            cellRight = document.getElementById(`cell_${line + 2}_${col - 2}`)
+            cellRight = document.getElementById(`cell_${line + 2}_${col + 2}`)
             cellRight.classList.add('cell-moves')
         } else if (map[line + 1][col - 1] == 1) {
-            cellLeft = document.getElementById(`cell_${line + 2}_${col + 2}`)
+            cellLeft = document.getElementById(`cell_${line + 2}_${col - 2}`)
             cellLeft.classList.add('cell-moves')
         }
     }
 }
 
-//VERIFICAR SE O JOGADOR EFETUOU UMA DAMA (CHEGOU AO OUTRO LADO DO TABULEIRO) (FEITO)
-function verifyQueen() {
-    let cell
-    let queen = document.createElement('img')
-    if (turn == 1) {
-        for (let i = 0; i < map[0].length; i++) {
-            if (map[0][i] == 1) {
-                cell = document.getElementById(`cell_0_${i}`)
-                cell.innerHTML = '';
-                queen.src = './images/bluePieceQueen.png';
-                queen.name = 'bluePiecesQueen'
-                cell.append(queen);
-            }
-        }   
-    }else{
-        for (let i = 0; i < map[7].length; i++) {
-            if (map[7][i] == 2) {
-                cell = document.getElementById(`cell_7_${i}`)
-                cell.innerHTML = '';
-                queen.src = './images/redPieceQueen.png';
-                queen.name = 'redPiecesQueen'
-                cell.append(queen);
-            }
-        }
-    }
-}
-
-//FAZER A TROCA DE TURNOS (FEITO)
-function endTurn() {
-    let spanTurn1 = document.getElementById('turn1')
-    let spanTurn2 = document.getElementById('turn2')
-
-    if (turn == 1) {
-        turn = 2
-        spanTurn1.hidden = false;
-        spanTurn2.hidden = true;
-    } else {
-        turn = 1
-        spanTurn1.hidden = true;
-        spanTurn2.hidden = false;
-    }
-}
-
-//VERIFICAR SE O JOGADOR GANHOU
-function checkWinner() {
-    if (pointsFirst == vitoryPoints || pointsSecond == vitoryPoints) {
-        if (pointsFirst == vitoryPoints) {
-            winner = players[0]
-        } else if (pointsSecond == vitoryPoints) {
-            winner = players[1]
-        }
-
-        if (typeof (Storage) !== undefined) {
-            if (localStorage.getItem('winners') === null) {
-
-            } else {
-                winners = JSON.parse(localStorage.getItem('winners'))
-
-                for (let i = 0; i < winners.length; i++) {
-                    if (winners[i][0] == winner) {
-                        existWinner = true
-                    }
-                }
-                if (existWinner) {
-
-                }
-            }
-        } else {
-            alert(`THIS BROWSER DOESN'T SUPPORT LOCAL STORAGE!`)
-        }
-
-        let restart = confirm(`GAME WON BY ${winner}! RESTART?`)
-
-        if (restart) {
-            location.reload()
-        } else {
-            location.replace('index.html')
-        }
-    }
-}
-
+//MOVER A PEÇA
 function movePiece(line, col) {
 
     let cell = document.getElementById(`cell_${line}_${col}`)
@@ -249,8 +252,6 @@ function movePiece(line, col) {
 
         lastCell.classList.remove('cell-selected');
 
-        console.log(lastCell.id);
-
         let lastLine = parseInt(lastCell.id.substring(5, 6))
 
         let lastCol = parseInt(lastCell.id.substring(7, 8))
@@ -260,7 +261,7 @@ function movePiece(line, col) {
             piece.name = 'bluePiece'
             map[lastLine][lastCol] = 0
             if (map[line + 1][col + 1] == 2) {
-                enemyCell = document.getElementById(`cell_${line - 1}_${col - 1}`)
+                enemyCell = document.getElementById(`cell_${lastLine - 1}_${lastCol - 1}`)
                 enemyCell.innerHTML = ''
                 pointsFirst++;
             }
@@ -271,7 +272,7 @@ function movePiece(line, col) {
             piece.name = 'redPiece'
             map[lastLine][lastCol] = 0
             if (map[line - 1][col - 1] == 1) {
-                enemyCell = document.getElementById(`cell_${line + 1}_${col + 1}`)
+                enemyCell = document.getElementById(`cell_${lastLine + 1}_${lastCol + 1}`)
                 enemyCell.innerHTML = ''
                 pointsSecond++;
             }
@@ -300,6 +301,8 @@ for (let i = 0; i < bluePieces.length; i++) {
         } else {
             alert(`É a vez de ${players[0]}`)
         }
+
+        event.stopPropagation()
     })
 }
 
@@ -311,6 +314,8 @@ for (let i = 0; i < redPieces.length; i++) {
         } else {
             alert(`É a vez de ${players[1]}`)
         }
+
+        event.stopPropagation()
     })
 }
 
@@ -319,7 +324,12 @@ table.addEventListener('click', (ev) => {
     let col = ev.target.cellIndex
     let row = ev.target.parentElement.rowIndex
 
+    console.log(col);
+    console.log(row);
+
     let cell = document.getElementById(`cell_${row}_${col}`)
+
+    console.log(cell);
 
     if (cell.classList.contains('cell-moves')) {
         movePiece(row, col)
