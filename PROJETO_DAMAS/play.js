@@ -6,7 +6,9 @@ let vitoryPoints = 12,
     players = [],
     primaryColor,
     secundaryColor,
-    winners
+    winners,
+    selectedPiece,
+    enemyCell
 
 let map = [
     [null, 2, null, 2, null, 2, null, 2],
@@ -19,8 +21,8 @@ let map = [
     [1, null, 1, null, 1, null, 1, null]
 ]
 
-let bluePieces = document.getElementsByName('bluePiece')
-let redPieces = document.getElementsByName('redPiece')
+// let bluePieces = document.getElementsByName('bluePiece')
+// let redPieces = document.getElementsByName('redPiece')
 let table = document.getElementById('board')
 
 getTheme();
@@ -130,12 +132,12 @@ function endTurn() {
 
     if (turn == 1) {
         turn = 2
-        spanTurn1.hidden = false;
-        spanTurn2.hidden = true;
-    } else {
-        turn = 1
         spanTurn1.hidden = true;
         spanTurn2.hidden = false;
+    } else {
+        turn = 1
+        spanTurn1.hidden = false;
+        spanTurn2.hidden = true;
     }
 }
 
@@ -191,6 +193,8 @@ function verifyPositions(piece) {
         }
     }
 
+    selectedPiece = piece
+
     let cell = piece.parentElement
     cell.classList.add('cell-selected')
 
@@ -200,21 +204,30 @@ function verifyPositions(piece) {
 
     let col = parseInt(cell.id.substring(7, 8))
 
+    console.log(line);
+    console.log(col);
+
+    console.log(map);
+
     if (turn == 1) {
-        let cellRight = document.getElementById(`cell_${line - 1}_${col - 1}`)
-        let cellLeft = document.getElementById(`cell_${line - 1}_${col + 1}`)
+        let cellRight = document.getElementById(`cell_${line - 1}_${col + 1}`)
+        let cellLeft = document.getElementById(`cell_${line - 1}_${col - 1}`)
         if (map[line - 1][col - 1] == 0 && map[line - 1][col + 1] == 0) {
             cellRight.classList.add('cell-moves')
             cellLeft.classList.add('cell-moves')
         } else if (col == 0 && map[line - 1][col + 1] == 0) {
             cellRight.classList.add('cell-moves')
+        } else if (map[line - 1][col - 1] == 1 && map[line - 1][col + 1] == 0) {
+            cellRight.classList.add('cell-moves')
         } else if (map[line - 1][col - 1] == 0 && col == 7) {
             cellLeft.classList.add('cell-moves')
-        } else if (map[line - 1][col - 1] == 2) {
-            cellLeft = document.getElementById(`cell_${line - 2}_${col + 2}`)
+        } else if (map[line - 1][col - 1] == 0 && map[line - 1][col + 1] == 1) {
             cellLeft.classList.add('cell-moves')
-        } else if (map[line - 1][col + 1] == 2) {
-            cellRight = document.getElementById(`cell_${line - 2}_${col - 2}`)
+        } else if (map[line - 1][col - 1] == 2 && map[line - 2][col - 2] == 0) {
+            cellLeft = document.getElementById(`cell_${line - 2}_${col - 2}`)
+            cellLeft.classList.add('cell-moves')
+        } else if (map[line - 1][col + 1] == 2 && map[line - 2][col + 2] == 0) {
+            cellRight = document.getElementById(`cell_${line - 2}_${col + 2}`)
             cellRight.classList.add('cell-moves')
         }
     } else {
@@ -225,14 +238,100 @@ function verifyPositions(piece) {
             cellLeft.classList.add('cell-moves')
         } else if (col == 7 && map[line + 1][col - 1] == 0) {
             cellLeft.classList.add('cell-moves')
-        } else if (col == 0 && map[line + 1][col - 1] == 0) {
+        } else if (col == 0 && map[line + 1][col + 1] == 0) {
             cellRight.classList.add('cell-moves')
-        } else if (map[line + 1][col + 1] == 1) {
+        } else if (map[line + 1][col + 1] == 1 && map[line + 1][col + 2] == 0) {
             cellRight = document.getElementById(`cell_${line + 2}_${col + 2}`)
             cellRight.classList.add('cell-moves')
-        } else if (map[line + 1][col - 1] == 1) {
+        } else if (map[line + 1][col - 1] == 1 && map[line + 1][col - 2] == 0) {
             cellLeft = document.getElementById(`cell_${line + 2}_${col - 2}`)
             cellLeft.classList.add('cell-moves')
+        }
+    }
+}
+
+//VERIFICAR SE É POSSIVEL MOVER A PEÇA
+function verifyPositionsQueen(piece) {
+    let selectedCells = document.getElementsByClassName('cell-selected')
+    let redCells = document.getElementsByClassName('cell-moves')
+    if (selectedCells !== null || redCells !== null) {
+        while (selectedCells.length >= 1) {
+            selectedCells[0].classList.remove('cell-selected')
+        }
+        while (redCells.length >= 1) {
+            redCells[0].classList.remove('cell-moves')
+        }
+    }
+
+    selectedPiece = piece
+
+    let cell = piece.parentElement
+    cell.classList.add('cell-selected')
+
+    console.log(cell.id);
+
+    let line = parseInt(cell.id.substring(5, 6))
+
+    let col = parseInt(cell.id.substring(7, 8))
+
+    console.log(line);
+    console.log(col);
+
+    if (turn == 1) {
+        let cellRight = document.getElementById(`cell_${line}_${col + 2}`)
+        let cellLeft = document.getElementById(`cell_${line}_${col - 2}`)
+        let cellFront = document.getElementById(`cell_${line + 2}_${col}`)
+        let cellBack = document.getElementById(`cell_${line - 2}_${col}`)
+        if (map[line][col - 2] == 0 && map[line][col + 2] == 0) {
+            cellRight.classList.add('cell-moves')
+            cellLeft.classList.add('cell-moves')
+        } else if (col == 0 && map[line][col + 2] == 0) {
+            cellRight.classList.add('cell-moves')
+        } else if (map[line][col - 2] == 0 && col == 7) {
+            cellLeft.classList.add('cell-moves')
+        } else if (map[line][col - 2] == 2) {
+            cellLeft = document.getElementById(`cell_${line}_${col - 4}`)
+            cellLeft.classList.add('cell-moves')
+        } else if (map[line][col + 2] == 2) {
+            cellRight = document.getElementById(`cell_${line}_${col + 4}`)
+            cellRight.classList.add('cell-moves')
+        } else if (map[line + 2][col] == 0 && map[line - 2][col] == 0) {
+            cellFront.classList.add('cellMoves')
+            cellBack.classList.add('cellMoves')
+        } else if (map[line - 2][col] == 2) {
+            cellFront = document.getElementById(`cell_${line + 4}_${col}`)
+            cellFront.classList.add('cellMoves')
+        } else if (map[line + 2][col] == 2) {
+            cellFront = document.getElementById(`cell_${line - 4}_${col}`)
+            cellBack.classList.add('cellMoves')
+        }
+    } else {
+        let cellRight = document.getElementById(`cell_${line}_${col + 2}`)
+        let cellLeft = document.getElementById(`cell_${line}_${col - 2 }`)
+        let cellFront = document.getElementById(`cell_${line + 2}_${col}`)
+        let cellBack = document.getElementById(`cell_${line - 2}_${col}`)
+        if (map[line][col - 2] == 0 && map[line][col + 2] == 0) {
+            cellRight.classList.add('cell-moves')
+            cellLeft.classList.add('cell-moves')
+        } else if (col == 0 && map[line][col + 2] == 0) {
+            cellRight.classList.add('cell-moves')
+        } else if (map[line][col - 2] == 0 && col == 7) {
+            cellLeft.classList.add('cell-moves')
+        } else if (map[line][col - 2] == 2) {
+            cellLeft = document.getElementById(`cell_${line}_${col - 4}`)
+            cellLeft.classList.add('cell-moves')
+        } else if (map[line][col + 2] == 2) {
+            cellRight = document.getElementById(`cell_${line}_${col + 4}`)
+            cellRight.classList.add('cell-moves')
+        } else if (map[line + 2][col] == 0 && map[line - 2][col] == 0) {
+            cellFront.classList.add('cellMoves')
+            cellBack.classList.add('cellMoves')
+        } else if (map[line + 2][col] == 2) {
+            cellFront = document.getElementById(`cell_${line + 4}_${col}`)
+            cellFront.classList.add('cellMoves')
+        } else if (map[line + 2][col] == 2) {
+            cellBack = document.getElementById(`cell_${line - 4}_${col}`)
+            cellBack.classList.add('cellMoves')
         }
     }
 }
@@ -243,10 +342,11 @@ function movePiece(line, col) {
     let cell = document.getElementById(`cell_${line}_${col}`)
 
     if (cell.classList.contains('cell-moves')) {
-        let enemyCell
         let lastCell = document.getElementsByClassName('cell-selected')[0]
         let sound = document.getElementById('movePiece')
-        let piece = document.createElement('img')
+        // let piece = document.createElement('img')
+
+        console.log(lastCell);
 
         lastCell.innerHTML = ''
 
@@ -257,27 +357,35 @@ function movePiece(line, col) {
         let lastCol = parseInt(lastCell.id.substring(7, 8))
 
         if (turn == 1) {
-            piece.src = 'images/bluePiece.png'
-            piece.name = 'bluePiece'
+            // piece.src = 'images/bluePiece.png'
+            // piece.name = 'bluePiece'
             map[lastLine][lastCol] = 0
-            if (map[line + 1][col + 1] == 2) {
+            if (map[line - 1][col + 1] == 2) {
+                enemyCell = document.getElementById(`cell_${lastLine - 1}_${lastCol + 1}`)
+                console.log(enemyCell);
+                pointsFirst++;
+            }else if(map[line - 1][col - 1] == 2){
                 enemyCell = document.getElementById(`cell_${lastLine - 1}_${lastCol - 1}`)
                 enemyCell.innerHTML = ''
                 pointsFirst++;
             }
             map[line][col] = 1
-            cell.append(piece)
+            cell.append(selectedPiece)
         } else {
-            piece.src = 'images/redPiece.png'
-            piece.name = 'redPiece'
+            // piece.src = 'images/redPiece.png'
+            // piece.name = 'redPiece'
             map[lastLine][lastCol] = 0
-            if (map[line - 1][col - 1] == 1) {
+            if (map[line + 1][col - 1] == 1) {
+                enemyCell = document.getElementById(`cell_${lastLine + 1}_${lastCol - 1}`)
+                enemyCell.innerHTML = ''
+                pointsSecond++;
+            } else if(map[line + 1][col + 1] == 1){
                 enemyCell = document.getElementById(`cell_${lastLine + 1}_${lastCol + 1}`)
                 enemyCell.innerHTML = ''
                 pointsSecond++;
             }
             map[line][col] = 2
-            cell.append(piece)
+            cell.append(selectedPiece)
         }
 
         let redCells = document.getElementsByClassName('cell-moves')
@@ -289,35 +397,16 @@ function movePiece(line, col) {
         if (localStorage.getItem('sound')) {
             sound.play();
         }
+
+        selectedPiece = null
     }
+
+    refreshPieces();
 }
 
 //VERIFICAR QUAIS SÃO AS POSSIBILIDADES DE JOGADA APÓS O CLIQUE NUMA PEÇA
-for (let i = 0; i < bluePieces.length; i++) {
-    bluePieces[i].addEventListener('click', function () {
 
-        if (turn == 1) {
-            verifyPositions(bluePieces[i]);
-        } else {
-            alert(`É a vez de ${players[0]}`)
-        }
-
-        event.stopPropagation()
-    })
-}
-
-for (let i = 0; i < redPieces.length; i++) {
-    redPieces[i].addEventListener('click', function () {
-
-        if (turn == 2) {
-            verifyPositions(redPieces[i]);
-        } else {
-            alert(`É a vez de ${players[1]}`)
-        }
-
-        event.stopPropagation()
-    })
-}
+refreshPieces();
 
 //EFETUAR JOGADA APÓS CLIQUE NUMA CÉLULA DO TABULEIRO (FEITO)
 table.addEventListener('click', (ev) => {
@@ -343,3 +432,62 @@ table.addEventListener('click', (ev) => {
         alert('MOVE TO A VALID POSITION!')
     }
 })
+
+function refreshPieces() {
+    redPieces = document.getElementsByName('redPiece')
+    redPiecesQueen = document.getElementsByName('redPiecesQueen')
+    bluePieces = document.getElementsByName('bluePiece')
+    bluePiecesQueen = document.getElementsByName('bluePiecesQueen')
+
+    bluePieces.forEach(bluePiece => {
+        bluePiece.addEventListener('click', () => {
+            if (turn == 1) {
+                // verifyPositions(bluePieces[i]);
+                verifyPositions(bluePiece)
+            } else {
+                alert(`É a vez de ${players[1]}`)
+            }
+
+            event.stopPropagation()
+        })
+    });
+
+    bluePiecesQueen.forEach(bluePieceQueen => {
+        bluePieceQueen.addEventListener('click', () => {
+            if (turn == 1) {
+                // verifyPositions(bluePieces[i]);
+                verifyPositionsQueen(bluePieceQueen)
+            } else {
+                alert(`É a vez de ${players[1]}`)
+            }
+
+            event.stopPropagation()
+        })
+    });
+
+    redPieces.forEach(redPiece => {
+        redPiece.addEventListener('click', () => {
+            if (turn == 2) {
+                // verifyPositions(bluePieces[i]);
+                verifyPositions(redPiece)
+            } else {
+                alert(`É a vez de ${players[0]}`)
+            }
+
+            event.stopPropagation()
+        })
+    });
+
+    redPiecesQueen.forEach(redPieceQueen => {
+        redPieceQueen.addEventListener('click', () => {
+            if (turn == 2) {
+                // verifyPositions(bluePieces[i]);
+                verifyPositionsQueen(redPieceQueen)
+            } else {
+                alert(`É a vez de ${players[0]}`)
+            }
+
+            event.stopPropagation()
+        })
+    });
+}
